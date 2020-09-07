@@ -88,6 +88,11 @@ keys = [
 
     Key([mod, "control"], "r", lazy.restart(), desc="Restart qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown qtile"),
+    
+
+    # Resize active window
+    Key([mod], "i", lazy.layout.grow()),
+    Key([mod], "m", lazy.layout.shrink()),
 
     # Run rofi
     Key([mod], "r", lazy.spawn("rofi -show run"),
@@ -112,8 +117,14 @@ for i in groups:
     ])
 
 layouts = [
-    layout.MonadTall(),
-    layout.Max(),
+    layout.MonadTall(
+        margin = 8,
+        border_focus = colors["normal"]["blue"],
+        name = "MonadTall",
+    ),
+    layout.Max(
+        margin = 8,
+    ),
     layout.Stack(num_stacks=2),
     layout.Floating(),
     # Try more layouts by unleashing below layouts.
@@ -132,7 +143,8 @@ widget_defaults = dict(
     font='sans',
     fontsize=14,
     padding=3,
-    foreground=colors["primary"]["foreground"]
+    foreground=colors["primary"]["foreground"],
+    background=colors["primary"]["background"]
 )
 extension_defaults = widget_defaults.copy()
 
@@ -145,29 +157,36 @@ screens = [
                     padding = 6,
                 ),
                 widget.GroupBox(
-                    font = "Ubuntu Bold",
                     fonsize = 10,
                     padding_x = 5,
                     padding_y = 5,
                     highlight_method = "block",
                     inactive = colors["bright"]["black"],
                     rounded = False,
+                    this_current_screen_border=colors["normal"]["blue"],
                     foreground = colors["normal"]["red"],
                     background = colors["primary"]["background"]
                 ),
-                widget.WindowName(),
-                widget.Clock(format='%A, %d-%m-%Y %H:%M'),
-                widget.Net(interface="enp0s3"),
-                widget.Systray(),
-                widget.CPU(),
-                widget.CurrentLayout(),
-                widget.Sep(
-                    linewidth = 0,
-                    padding = 6,
+                widget.WindowName(
+                    foreground = colors["bright"]["magenta"],
+                ),
+                widget.Clock(format='%A, %b %d %H:%M'),
+                widget.Spacer(),
+                widget.Notify(
+                    default_timeout = 2,
+                ),
+                widget.Systray(icon_size=24),
+                widget.Pacman(),
+                widget.Volume(
+                    # padding = 100,
+                    # theme_path="/usr/share/icons/Parpirus-Dark",
+                ),
+                # widget.CapsNumLockIndicator(),
+                widget.CurrentLayout(
+                    padding = 10,
                 ),
             ],
             35,
-            background=colors["primary"]["background"]
         ),
     ),
 ]
@@ -203,6 +222,9 @@ floating_layout = layout.Floating(float_rules=[
     {'wname': 'branchdialog'},  # gitk
     {'wname': 'pinentry'},  # GPG key password entry
     {'wmclass': 'ssh-askpass'},  # ssh-askpass
+    {'wname': 'Steam Guard - Computer Authorization Required'},
+    # {'wname': 'Steam'},
+    {'wname': 'Preferences'},  # ssh-askpass
 ])
 auto_fullscreen = True
 focus_on_window_activation = "smart"
