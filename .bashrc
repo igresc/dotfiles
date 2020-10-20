@@ -25,7 +25,10 @@ shopt -s autocd
 stty -ixon
 
 # Prompt customization
-PS1='[\u@\h \W]\$ '
+# PS1='[\u@\h \W]\$ '
+
+PS1="\e[1;32m\u@\h:\e[34m\W\e[0m$ "
+
 
 # Alias
 alias ls='ls --color=auto'
